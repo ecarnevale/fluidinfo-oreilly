@@ -1,0 +1,92 @@
+<style>
+body {
+  min-width:357px;
+  overflow-x:hidden;
+  font-family: Verdana, Helvetica, Arial;
+  font-size: 14px;
+}
+
+img {
+  margin:5px;
+  border:2px solid black;
+  vertical-align:middle;
+  width:75px;
+  height:75px;
+}
+
+
+</style>
+<script type="text/javascript" src="javascripts/jquery-1.5.min.js"></script>
+<script type="text/javascript" src="javascripts/jsFluidDB.js"></script>
+<script type="text/javascript" src="javascripts/fluidinfo.js"></script>
+<script>
+$(document).ready(function(){
+  username = localStorage.username;
+  password = localStorage.password;
+  if(!username && !password){
+    $("#login_alert").show();
+  }else{
+    $(".username").html(username);
+    $("#logged_in").show();
+  };
+
+  $("#options_button").click(function(){
+    $(".box").hide();
+    $("#signin_form_outer_box").show();
+  });
+
+  $("#save").click(function(){
+    // validation
+    window.localStorage.setItem("username", $("#username").val());
+    window.localStorage.setItem("password", $("#password").val());
+    // here the initTag function should be called. TODO
+    $(".box").hide();
+    $("#logged_in").show();
+  });
+
+  $("#cancel").click(function(){
+    $(".box").hide();
+    $("#login_alert").show();
+  });
+
+  $("#logout").click(function(){
+    window.localStorage.clear();
+    $(".box").hide();
+    $("#login_alert").show();
+  });
+});
+</script>
+
+<div id="container">
+  <div class="top">
+    <div id="left_col">
+      <img src="images/fi-logo-large-site.png" border="0" alt="" width="200" height="245" />
+    </div> <!-- end #top -->
+    <div id="center_col">
+      <div id="login_alert" class="box" style="display:none;">
+        Please <a href="https://fluidinfo.com/accounts/new" target="_blank">sign up</a> for a Fluidinfo account and enter your credentials on the <span id="options_button"><a href="#">options page</a></span>.
+      </div>
+      <div id="signin_form_outer_box" class="box" style="display:none;">
+        <h2>Enter your Fluidinfo account information</h2>
+        <form action="#" method="get" accept-charset="utf-8">
+          <div id="" class="form_box">
+            <input type="username" placeholder="Username" id="username">
+            <input type="password" placeholder="Password" id="password">
+          </div>
+          <div class="form_box">
+            <button id="save">Save</button>
+            <button id="cancel">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="logged_in" class="box" style="display:none;">
+      <em>You're currently logged in as <span class="username"></span>. <span id="logout">Logout</span>.</em>
+    </div>
+  </div>
+  <div id="bottom">
+
+  </div> <!-- end #bottom -->
+</div> <!-- end #container -->
+
+

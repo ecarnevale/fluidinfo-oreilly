@@ -1,0 +1,29 @@
+{
+  "name": "O'Reilly Fluidinfo extension",
+  "version": "1.0",
+  "description": "Browse and tag O'Reilly's objects on Fluidinfo",
+  "background_page": "background.html",
+  "browser_action": {
+    "default_icon": "images/icons/icon.png",
+    "popup": "popup.html"
+  },
+  "icons" : {
+    "16" : "images/icons/logo_16.png",
+    "48" : "images/icons/logo_48.png",
+    "128" : "images/icons/logo_128.png"
+  },
+  "permissions": [
+    "http://oreilly.com/*",
+    "http://fluiddb.fluidinfo.com/*",
+    "unlimited_storage",
+    "tabs",
+    "contextMenus"
+  ],
+  "content_scripts": [
+    {
+     "matches": ["http://oreilly.com/catalog/*"],
+     "js": ["javascripts/naco.js", "javascripts/jquery-1.5.min.js", "javascripts/jsFluidDB.js", "javascripts/fluidinfo.js", "javascripts/content_script.js", "javascripts/background.js"]
+    }
+  ]
+}
+
