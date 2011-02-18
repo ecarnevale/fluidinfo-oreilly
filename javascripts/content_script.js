@@ -12,6 +12,19 @@ if(authors_count > 1){
 }
 $(".product-metadata .authorname").parents("dl").after('<div id="fluidinfo"><div id="object_id" style="display:none;"></div></div>');
 
+function actOnBook(action){
+  chrome.extension.sendRequest(
+    {
+      'id'  : $("#object_id").html(),
+      'action'      : action+'Book'
+    },
+    function(resp){
+      $("#fluidinfo-button-own").toggle();
+      $("#fluidinfo-button-release").toggle();
+    });
+
+};
+
 chrome.extension.sendRequest(
   {
     'action'      : 'initTag',
@@ -32,29 +45,11 @@ chrome.extension.sendRequest(
     $("#fluidinfo #object_id").after('<span id="fluidinfo-button-own"><button type="button" class="own"><img src="'+ icon_url +'" alt=""/>I own it</button></span><span id="fluidinfo-button-release" style="display:none"><button type="button" class="release"><img src="' + icon_url + '" alt=""/>I don\'t own it</button></span>');
 
     $("#fluidinfo .own").click(function(){
-      chrome.extension.sendRequest(
-        {
-          'id'  : $("#object_id").html(),
-          'action'      : 'ownBook'
-        },
-        function(resp){
-          $("#fluidinfo-button-own").hide();
-          $("#fluidinfo-button-release").show();
-        });
-
+      actOnBook("own");
     });
 
     $("#fluidinfo .release").click(function(){
-      chrome.extension.sendRequest(
-        {
-          'id'  : $("#object_id").html(),
-          'action'      : 'releaseBook'
-        },
-        function(resp){
-          $("#fluidinfo-button-own").show();
-          $("#fluidinfo-button-release").hide();
-        });
-
+      actOnBook("release");
     });
 
     chrome.extension.sendRequest(
@@ -65,6 +60,5 @@ chrome.extension.sendRequest(
       function(resp){
         $("#fluidinfo-button-own").hide();
         $("#fluidinfo-button-release").show();
-        alert("the response is:" + resp.message);
       });
   });

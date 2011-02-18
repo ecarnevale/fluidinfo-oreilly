@@ -29,7 +29,6 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
                  },
                   false,
                   username,
-                  //password);
                   password,
                   true);
   }else if(request.action == "isBookOwned?"){

@@ -1,6 +1,6 @@
 {
   "name": "O'Reilly Fluidinfo extension",
-  "version": "1.0",
+  "version": "0.9",
   "description": "Browse and tag O'Reilly's objects on Fluidinfo",
   "background_page": "background.html",
   "browser_action": {
