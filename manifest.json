@@ -22,7 +22,7 @@
   "content_scripts": [
     {
      "matches": ["http://oreilly.com/catalog/*"],
-     "js": ["javascripts/naco.js", "javascripts/jquery-1.5.min.js", "javascripts/jsFluidDB.js", "javascripts/fluidinfo.js", "javascripts/content_script.js", "javascripts/background.js"]
+     "js": ["javascripts/jquery-1.5.min.js", "javascripts/jquery.qtip.min.js", "javascripts/naco.js", "javascripts/jsFluidDB.js", "javascripts/fluidinfo.js", "javascripts/content_script.js", "javascripts/background.js"]
     }
   ]
 }
