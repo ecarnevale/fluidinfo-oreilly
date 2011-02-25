@@ -7,53 +7,67 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
   if(request.action == "initTag"){
     // initiates the tag on Fluidinfo
     if(username && password){
-      fluidDB.post("tags/"+username, '{"name" : "'+ request.tag +'", "description" : "' + request.description + '", "indexed" : false}',
-                   function(json){
-                      sendResponse({message: "created"});
-                   },
-                    false,
-                    username,
-                    password);
+      fluidDB.post({
+                    url: "tags/"+username,
+                    payload: '{"name" : "'+ request.tag +'", "description" : "' + request.description + '", "indexed" : false}',
+                    success: function(json){
+                               sendResponse({message: "created"});
+                             },
+                    async: false,
+                    username: username,
+                    password: password
+                   });
     }else{
       sendResponse({message: "Error, password not found"});
     }
   }else if(request.action == "searchBook"){
 
     var query = escape('fluidDB/about="'+ request.about +'"');
-    fluidDB.get("values?query="+query+"&tag=amazon.com/price/usd&tag=amazon.com/url&tag=books.google.com/url&tag=goodreads.com/url",
-                function(json){
-                  for(key in json.results.id){ id = key}; //need to get the object ID. ugly, but it saves a GET
-                  sendResponse({
-                    id:     id,
-                    values: json.results.id[id]
-                  });
-                });
+    fluidDB.get({
+                  url: "values?query="+query+"&tag=amazon.com/price/usd&tag=amazon.com/url&tag=books.google.com/url&tag=goodreads.com/url",
+                  success: function(json){
+                             for(key in json.results.id){ id = key}; //need to get the object ID. ugly, but it saves a GET
+                             sendResponse({
+                               id:     id,
+                               values: json.results.id[id]
+                             });
+                           },
+                  async: false,
+                  username: username,
+                  password: password
+                 });
   }else if(request.action == "ownBook"){
-    fluidDB.put("objects/"+request.id+"/"+username+'/owns',
-                'null',
-                 function(json){
-                    sendResponse({message: "created"});
-                 },
-                  false,
-                  username,
-                  password,
-                  true);
+    fluidDB.put({
+                  url: "objects/"+request.id+"/"+username+'/owns',
+                  opaque: true,
+                  payload: 'null',
+                  success: function(json){
+                             sendResponse({message: "created"});
+                           },
+                  async: false,
+                  username: username,
+                  password: password
+                 });
   }else if(request.action == "isBookOwned?"){
-    fluidDB.head("objects/"+request.id+"/"+username+'/owns',
-                 function(json){
-                    sendResponse({message: "oh yes, you have it!"});
-                 },
-                  false,
-                  username,
-                  password);
+    fluidDB.head({
+                   url: "objects/"+request.id+"/"+username+'/owns',
+                   success: function(json){
+                              sendResponse({message: "oh yes, you have it!"});
+                            },
+                   async: false,
+                   username: username,
+                   password: password
+                 });
   }else if(request.action == "releaseBook"){
-    fluidDB.delete("objects/"+request.id+"/"+username+'/owns',
-                 function(json){
-                    sendResponse({message: "deleted"});
-                 },
-                  false,
-                  username,
-                  password);
+    fluidDB.delete({
+                   url: "objects/"+request.id+"/"+username+'/owns',
+                   success: function(json){
+                              sendResponse({message: "deleted"});
+                            },
+                   async: false,
+                   username: username,
+                   password: password
+                 });
   }
 });
 
