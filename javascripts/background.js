@@ -52,7 +52,10 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     fluidDB.head({
                    url: "objects/"+request.id+"/"+username+'/owns',
                    success: function(json){
-                              sendResponse({message: "oh yes, you have it!"});
+                              sendResponse({owns: true});
+                            },
+                   error: function(json){
+                              sendResponse({owns: false});
                             },
                    async: false,
                    username: username,
