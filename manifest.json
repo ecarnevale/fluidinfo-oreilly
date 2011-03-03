@@ -22,7 +22,8 @@
   "content_scripts": [
     {
      "matches": ["http://oreilly.com/catalog/*"],
-     "js": ["javascripts/jquery-1.5.min.js", "javascripts/jquery.mustache.js", "javascripts/jquery.qtip.min.js", "javascripts/naco.js", "javascripts/jsFluidDB.js", "javascripts/fluidinfo.js", "javascripts/content_script.js", "javascripts/background.js"]
+     "css" : ["jquery.cluetip.css"],
+     "js": ["javascripts/jquery-1.5.min.js", "javascripts/jquery.mustache.js", "javascripts/jquery.cluetip.js", "javascripts/jquery.qtip.min.js", "javascripts/jquery-ui-1.8.10.custom.min.js", "javascripts/naco.js", "javascripts/jsFluidDB.js", "javascripts/fluidinfo.js", "javascripts/content_script.js", "javascripts/background.js"]
     }
   ]
 }
