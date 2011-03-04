@@ -2,7 +2,6 @@ var book_title  = $("#title").html();
 var authors_count = $(".product-metadata .authorname").size();
 var images_url = chrome.extension.getURL('images/');
 var icon_url = images_url + 'icons/icon.png';
-var own_icon_url = images_url + 'icons/icon.png';
 if(authors_count > 1){
   authors = [];
   $(".product-metadata .authorname").each(function(index){
@@ -24,8 +23,10 @@ function actOnBook(action){
     },
     function(resp){
       $("#ajax-loader").hide();
-      $(".fluidinfo-button").toggle();
       $("."+action+"-notice").show().effect('highlight', 1000);
+      $("#own-radio").removeAttr("checked");
+      $("#release-radio").removeAttr("checked");
+      $("#"+action+"-radio").attr("checked", "checked");
     });
 
 };
@@ -35,11 +36,15 @@ var popup_templ = ''
 +'{{#google_url}}<p><a id="google_url" href="{{google_url}}">books.google.com</a></p>{{/google_url}}'
 +'{{#goodreads_url}}<p><a id="goodreads_url" href="{{goodreads_url}}">goodreads.com</a></p>{{/goodreads_url}}'
 +'<br/>'
-+'<div class="own-notice notice" {{^owns}}style="display:none;"{{/owns}}>You own this book.<br/><em>(<span class="own">click the icon if you don\'t have it anymore</span>)</em></div>'
-+'<div class="release-notice notice" {{#owns}}style="display:none;"{{/owns}}>You don\'t own this book.<br><em>(<span class="release">click the icon if you have it</span>)</em></div>'
++'<div class="own-notice notice" {{^owns}}style="display:none;"{{/owns}}>You own this book.<button id="fluidinfo-button-release">No, I don\'t</button></div>'
++'<div class="release-notice notice" {{#owns}}style="display:none;"{{/owns}}>You don\'t own this book.<button id="fluidinfo-button-own">Yes I do</button></div>'
++'<div id="radio">'
++'  <input type="radio" id="own-radio"     name="radio" {{#owns}}checked="checked"{{/owns}} /><label for="own-radio">I own this book.</label>'
++'  <input type="radio" id="release-radio" name="radio" {{^owns}}checked="checked"{{/owns}} /><label for="release-radio">I don\'t own this book</label>'
++'</div>'
 +'<center><div id="ajax-loader" style="display:none;"><img src="' + images_url + 'ajax-loader.gif' + '" /></div></center>';
 
-$(".product-metadata .authorname").parents("dl").after('<div id="fluidinfo"><div id="popup" style="display:none; text-align:left;"></div><div id="object_id" style="display:none;"></div><img id="fluidinfo-button-own" class="fluidinfo-button" src="' + own_icon_url + '" alt="#popup"/><img id="fluidinfo-button-release" class="fluidinfo-button" style="display:none;" src="' + icon_url + '" alt="#popup"/></div>');
+$(".product-metadata .authorname").parents("dl").after('<div id="fluidinfo"><div id="popup" style="display:none; text-align:left;"></div><div id="object_id" style="display:none;"></div><img class="fluidinfo-button" src="' + icon_url + '" alt=""/></div>');
 
 function setupTooltip(response){
   vars = {title: book_title,
@@ -58,6 +63,8 @@ function setupTooltip(response){
   }
 
   $("#popup").html($.mustache(popup_templ, vars));
+  $("#popup button").button();
+  $("#popup #radio").buttonset()
                                          
   $("#popup").dialog({ autoOpen: false, title: '<b>More information about <span id="book_title">\''+book_title+'\'</span>:</b>' });
 };
@@ -87,11 +94,9 @@ chrome.extension.sendRequest(
       function(respTwo){
         if(respTwo.owns){
           resp.owns = true;
-          $("#fluidinfo-button-own").hide();
-          $("#fluidinfo-button-release").show();
         }
         setupTooltip(resp);
-        $(".fluidinfo-button").hover(function(){
+        $(".fluidinfo-button").click(function(){
           var target = $(this);
           $("#popup").dialog('open').dialog('widget').position({
              my: 'left center',
@@ -99,6 +104,13 @@ chrome.extension.sendRequest(
              of: target,
              collision: "fit none"
           });
+        });
+        $("#own-radio").click(function(){
+          actOnBook("own");
+        });
+
+        $("#release-radio").click(function(){
+          actOnBook("release");
         });
         $("#fluidinfo-button-own").click(function(){
           actOnBook("own");
