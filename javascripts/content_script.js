@@ -50,7 +50,7 @@ function setupTooltip(response){
                                           amazon_price: "$" + response.values["amazon.com/price/usd"].value/100,
                                           owns: response.owns
                                          }));
-  $("#popup").dialog({ autoOpen: false, title: '<b>You can find <span id="book_title">\''+book_title+'\'</span> on:</b>' });
+  $("#popup").dialog({ autoOpen: false, title: '<b>More information about <span id="book_title">\''+book_title+'\'</span>:</b>' });
 };
 
 chrome.extension.sendRequest(
