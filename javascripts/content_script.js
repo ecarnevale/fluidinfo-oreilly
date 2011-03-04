@@ -38,6 +38,7 @@ var popup_templ = ''
 +'  <input type="radio" id="own-radio"     name="radio" {{#owns}}checked="checked"{{/owns}} /><label for="own-radio">I own this book.</label>'
 +'  <input type="radio" id="release-radio" name="radio" {{^owns}}checked="checked"{{/owns}} /><label for="release-radio">I don\'t own this book</label>'
 +'</div>'
++'<br/>'
 +'<center><div id="ajax-loader" style="display:none;"><img src="' + images_url + 'ajax-loader.gif' + '" /></div></center>';
 
 $(".product-metadata .authorname").parents("dl").after('<div id="fluidinfo"><div id="popup" style="display:none; text-align:left;"></div><div id="object_id" style="display:none;"></div><img class="fluidinfo-button" src="' + icon_url + '" alt=""/></div>');
