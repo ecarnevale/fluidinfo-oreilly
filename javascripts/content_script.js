@@ -42,14 +42,23 @@ var popup_templ = ''
 $(".product-metadata .authorname").parents("dl").after('<div id="fluidinfo"><div id="popup" style="display:none; text-align:left;"></div><div id="object_id" style="display:none;"></div><img id="fluidinfo-button-own" class="fluidinfo-button" src="' + own_icon_url + '" alt="#popup"/><img id="fluidinfo-button-release" class="fluidinfo-button" style="display:none;" src="' + icon_url + '" alt="#popup"/></div>');
 
 function setupTooltip(response){
-  $("#popup").html($.mustache(popup_templ,
-                                         {title: book_title,
-                                          amazon_url: response.values["amazon.com/url"].value,
-                                          google_url: response.values["books.google.com/url"].value,
-                                          goodreads_url: response.values["goodreads.com/url"].value,
-                                          amazon_price: "$" + response.values["amazon.com/price/usd"].value/100,
-                                          owns: response.owns
-                                         }));
+  vars = {title: book_title,
+          owns: response.owns};
+  if(response.values["amazon.com/url"]){
+    vars.amazon_url = response.values["amazon.com/url"].value;
+  }
+  if(response.values["books.google.com/url"]){
+    vars.google_url = response.values["books.google.com/url"].value;
+  }
+  if(response.values["goodreads.com/url"]){
+    vars.goodreads_url = response.values["goodreads.com/url"].value;
+  }
+  if(response.values["amazon.com/price/usd"]){
+    vars.amazon_price = response.values["amazon.com/price/usd"].value/100;
+  }
+
+  $("#popup").html($.mustache(popup_templ, vars));
+                                         
   $("#popup").dialog({ autoOpen: false, title: '<b>More information about <span id="book_title">\''+book_title+'\'</span>:</b>' });
 };
 
