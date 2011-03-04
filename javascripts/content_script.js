@@ -14,7 +14,6 @@ if(authors_count > 1){
 }
 
 function actOnBook(action){
-  $(".notice").hide();
   $("#ajax-loader").show();
   chrome.extension.sendRequest(
     {
@@ -23,7 +22,6 @@ function actOnBook(action){
     },
     function(resp){
       $("#ajax-loader").hide();
-      $("."+action+"-notice").show().effect('highlight', 1000);
       $("#own-radio").removeAttr("checked");
       $("#release-radio").removeAttr("checked");
       $("#"+action+"-radio").attr("checked", "checked");
@@ -32,12 +30,10 @@ function actOnBook(action){
 };
 
 var popup_templ = ''
-+'{{#amazon_url}}<p><a id="amazon_url" href="{{amazon_url}}">Amazon.com</a> (<span id="amazon_price">{{amazon_price}}</span>)</p>{{/amazon_url}}'
++'{{#amazon_url}}<p><a id="amazon_url" href="{{amazon_url}}">Amazon.com</a> (<span id="amazon_price">${{amazon_price}}</span>)</p>{{/amazon_url}}'
 +'{{#google_url}}<p><a id="google_url" href="{{google_url}}">books.google.com</a></p>{{/google_url}}'
 +'{{#goodreads_url}}<p><a id="goodreads_url" href="{{goodreads_url}}">goodreads.com</a></p>{{/goodreads_url}}'
 +'<br/>'
-+'<div class="own-notice notice" {{^owns}}style="display:none;"{{/owns}}>You own this book.<button id="fluidinfo-button-release">No, I don\'t</button></div>'
-+'<div class="release-notice notice" {{#owns}}style="display:none;"{{/owns}}>You don\'t own this book.<button id="fluidinfo-button-own">Yes I do</button></div>'
 +'<div id="radio">'
 +'  <input type="radio" id="own-radio"     name="radio" {{#owns}}checked="checked"{{/owns}} /><label for="own-radio">I own this book.</label>'
 +'  <input type="radio" id="release-radio" name="radio" {{^owns}}checked="checked"{{/owns}} /><label for="release-radio">I don\'t own this book</label>'
@@ -110,13 +106,6 @@ chrome.extension.sendRequest(
         });
 
         $("#release-radio").click(function(){
-          actOnBook("release");
-        });
-        $("#fluidinfo-button-own").click(function(){
-          actOnBook("own");
-        });
-
-        $("#fluidinfo-button-release").click(function(){
           actOnBook("release");
         });
       });
