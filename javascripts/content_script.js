@@ -82,33 +82,40 @@ chrome.extension.sendRequest(
     'about'  : pageURL
   },
   function(resp){
-    $("#object_id").html(resp.id); // saves the object-id in the DOM
+    if(resp.found){
+      // Book object found
 
-    chrome.extension.sendRequest(
-      {
-        'action' : 'isBookOwned?',
-        'id'  : resp.id
-      },
-      function(respTwo){
-        if(respTwo.owns){
-          resp.owns = true;
-        }
-        setupTooltip(resp);
-        $(".fluidinfo-button").click(function(){
-          var target = $(this);
-          $("#popup").dialog('open').dialog('widget').position({
-             my: 'left center',
-             at: 'right center',
-             of: target,
-             collision: "fit none"
+      $("#object_id").html(resp.id); // saves the object-id in the DOM
+
+      chrome.extension.sendRequest(
+        {
+          'action' : 'isBookOwned?',
+          'id'  : resp.id
+        },
+        function(respTwo){
+          if(respTwo.owns){
+            resp.owns = true;
+          }
+          setupTooltip(resp);
+          $(".fluidinfo-button").click(function(){
+            var target = $(this);
+            $("#popup").dialog('open').dialog('widget').position({
+               my: 'left center',
+               at: 'right center',
+               of: target,
+               collision: "fit none"
+            });
+          });
+          $("#own-radio").click(function(){
+            actOnBook("own");
+          });
+
+          $("#release-radio").click(function(){
+            actOnBook("release");
           });
         });
-        $("#own-radio").click(function(){
-          actOnBook("own");
-        });
-
-        $("#release-radio").click(function(){
-          actOnBook("release");
-        });
-      });
+    }else{
+      // Book object not found
+      $(".fluidinfo-button").hide();
+    }
   });

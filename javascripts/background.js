@@ -23,19 +23,33 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
   }else if(request.action == "searchBook"){
 
     var query = escape('fluidDB/about="'+ request.about +'"');
-    fluidDB.get({
-                  url: "values?query="+query+"&tag=amazon.com/price/usd&tag=amazon.com/url&tag=books.google.com/url&tag=goodreads.com/url",
+    fluidDB.get({ //it's possible to do everything with one GET to /values, but for semplicity we check first that the object exists.
+                  url: "objects?query="+query,
                   success: function(json){
-                             for(key in json.results.id){ id = key}; //need to get the object ID. ugly, but it saves a GET
-                             sendResponse({
-                               id:     id,
-                               values: json.results.id[id]
-                             });
+                           if(json.ids[0]){
+                              object_id = json.ids[0];
+                              fluidDB.get({
+                                            url: "values?query="+query+"&tag=amazon.com/price/usd&tag=amazon.com/url&tag=books.google.com/url&tag=goodreads.com/url",
+                                            success: function(json){
+                                                       sendResponse({
+                                                         found:  true,
+                                                         id:     object_id,
+                                                         values: json.results.id[object_id]
+                                                       });
+                                                     },
+                                            async: false,
+                                            username: username,
+                                            password: password
+                                           });
+                           }else{
+                             sendResponse({found:false});
+                           }
                            },
                   async: false,
                   username: username,
                   password: password
                  });
+
   }else if(request.action == "ownBook"){
     fluidDB.put({
                   url: "objects/"+request.id+"/"+username+'/owns',
