@@ -1,4 +1,5 @@
-var book_title  = $("#title").html();
+var book_title  = $("#title").text();
+alert(""+book_title);
 var authors_count = $(".product-metadata .authorname").size();
 var images_url = chrome.extension.getURL('images/');
 var icon_url = images_url + 'icons/icon.png';
