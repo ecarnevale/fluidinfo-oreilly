@@ -1,6 +1,6 @@
 {
   "name": "O'Reilly Fluidinfo extension",
-  "version": "0.92",
+  "version": "0.92a",
   "update_url": "http://fluiddb.fluidinfo.com/objects/257e5ed4-869e-469b-b08c-95d0dc09111e/fluidinfo/chrome-extension.xml",
   "description": "Browse and tag O'Reilly's objects on Fluidinfo",
   "background_page": "background.html",
