@@ -1,4 +1,5 @@
 // creating the listener for all the fluidinfo calls
+// this is the only file that can do cross-domain requests.
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
   var username = localStorage.username;

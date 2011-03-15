@@ -2,6 +2,7 @@
 // Emanuel Carnevale
 // emanuel.carnevale@gmail.com
 // inspired by the work of @njr0
+// http://blog.abouttag.com/2010/03/how-to-tag-books-in-fluiddb.html
 
 naco = new Object();
 

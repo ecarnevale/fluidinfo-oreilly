@@ -1,7 +1,11 @@
+// getting the book information from the page
+
 var book_title  = $("#title").text();
 var authors_count = $(".product-metadata .authorname").size();
+
 var images_url = chrome.extension.getURL('images/');
 var icon_url = images_url + 'icons/icon.png';
+
 if(authors_count > 1){
   authors = [];
   $(".product-metadata .authorname").each(function(index){
@@ -29,6 +33,7 @@ function actOnBook(action){
 
 };
 
+// template for the popup (using mustache https://github.com/janl/mustache.js/ )
 var popup_templ = ''
 +'{{#amazon_url}}<p><a id="amazon_url" href="{{amazon_url}}">Amazon.com</a> (<span id="amazon_price">${{amazon_price}}</span>)</p>{{/amazon_url}}'
 +'{{#google_url}}<p><a id="google_url" href="{{google_url}}">books.google.com</a></p>{{/google_url}}'
@@ -41,7 +46,13 @@ var popup_templ = ''
 +'<br/>'
 +'<center><div id="ajax-loader" style="display:none;"><img src="' + images_url + 'ajax-loader.gif' + '" /></div></center>';
 
+
+// inserting the fluidinfo-button in the page
 $(".product-metadata .authorname").parents("dl").after('<div id="fluidinfo"><div id="popup" style="display:none; text-align:left;"></div><div id="object_id" style="display:none;"></div><img class="fluidinfo-button" src="' + icon_url + '" alt=""/></div>');
+
+// fills the template with the variables from the response from
+// fluidinfo
+// and set the dialog up
 
 function setupTooltip(response){
   vars = {title: book_title,
@@ -66,6 +77,7 @@ function setupTooltip(response){
   $("#popup").dialog({ autoOpen: false, title: '<b>More information about <span id="book_title">\''+book_title+'\'</span>:</b>' });
 };
 
+// creates the tag namespace for the user if it doesn't exists
 chrome.extension.sendRequest(
   {
     'action'      : 'initTag',
@@ -75,6 +87,8 @@ chrome.extension.sendRequest(
   function(resp){
   });
 
+// checks that the book has an object in Fluidinfo and retrieves some
+// values
 chrome.extension.sendRequest(
   {
     'action' : 'searchBook',
@@ -86,7 +100,7 @@ chrome.extension.sendRequest(
 
       $("#object_id").html(resp.id); // saves the object-id in the DOM
 
-      chrome.extension.sendRequest(
+      chrome.extension.sendRequest( // does the user own the book?
         {
           'action' : 'isBookOwned?',
           'id'  : resp.id
@@ -96,7 +110,7 @@ chrome.extension.sendRequest(
             resp.owns = true;
           }
           setupTooltip(resp);
-          $(".fluidinfo-button").click(function(){
+          $(".fluidinfo-button").click(function(){ //binding dialog creation to the button click event
             var target = $(this);
             $("#popup").dialog('open').dialog('widget').position({
                my: 'left center',
@@ -106,10 +120,12 @@ chrome.extension.sendRequest(
             });
           });
           $("#own-radio").click(function(){
+            // mark the book as owned
             actOnBook("own");
           });
 
           $("#release-radio").click(function(){
+            // mark the book as owned no more (removing the tag)
             actOnBook("release");
           });
         });
